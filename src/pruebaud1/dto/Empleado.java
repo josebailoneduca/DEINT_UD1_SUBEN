@@ -18,7 +18,18 @@ public class Empleado {
     String apellidos;
     String dni;
     double sueldo;
-
+    
+    
+    //METODOS
+    
+    /**
+     * Constructor
+     * @param id
+     * @param nombre
+     * @param apellidos
+     * @param dni
+     * @param sueldo 
+     */
     public Empleado(int id, String nombre, String apellidos, String dni, double sueldo) {
         this.id = id;
         this.nombre = nombre;

@@ -41,6 +41,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         initPropio();
     }
 
+//INICIALIZACION ###############################################################
+//<editor-fold defaultstate="collapsed" desc="INICIALIZACION">
+    
+    
     /**
      * Inicializar estado inicial: -Inicializar tablas -Limpieza formulario
      * insercion
@@ -49,10 +53,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         inicializarTablaTrabajos();
         inicializarTablaEmpleadosDeTrabajo();
         inicializarTablaTodosEmpleados();
-
         resetearFormNuevoTrabajo();
     }
-
+    
     /**
      * Actualiza la tabla conformando su modelo e introduciendo los datos
      * necesarios
@@ -62,26 +65,26 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         TrabajosTableModel etm = new TrabajosTableModel(Logica.getTrabajos());
         //establecer el modelo como modelo de la tabla
         this.tblTrabajos.setModel(etm);
-
+        
         //crear sorter
         TableRowSorter<TrabajosTableModel> rowSorter = new TableRowSorter<>(etm);
         this.tblTrabajos.setRowSorter(rowSorter);
-
+        
         //ordenacion por defecto inicial
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         rowSorter.setSortKeys(sortKeys);
-
+        
         //listener de seleccion de fila
         this.tblTrabajos.getSelectionModel().addListSelectionListener(this);
     }
-
+    
     private void acutalizarTablaTrabajos() {
-        //actualizar los datos de la tabla 
+        //actualizar los datos de la tabla
         TrabajosTableModel etm = (TrabajosTableModel) tblTrabajos.getModel();
         etm.fireTableDataChanged();
     }
-
+    
     /**
      * Actualiza la tabla conformando su modelo e introduciendo los datos
      * necesarios
@@ -90,7 +93,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         //listener de seleccion de fila
         this.tblEmpleadosDeTrabajo.getSelectionModel().addListSelectionListener(this);
     }
-
+    
     /**
      * Actualiza la tabla conformando su modelo e introduciendo los datos
      * necesarios
@@ -100,28 +103,100 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         EmpleadosTableModel etm = new EmpleadosTableModel(Logica.getEmpleados());
         //establecer el modelo como modelo de la tabla
         this.tblTodosEmpleados.setModel(etm);
-
+        
         //crear sorter
         TableRowSorter<EmpleadosTableModel> rowSorter = new TableRowSorter<>(etm);
         this.tblTodosEmpleados.setRowSorter(rowSorter);
-
+        
         //ordenacion por defecto inicial
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         rowSorter.setSortKeys(sortKeys);
-
+        
         //listener de seleccion de fila
         this.tblTodosEmpleados.getSelectionModel().addListSelectionListener(this);
-
+        
     }
-
+    
     private void actualizarTablaTodosEmpleados() {
-        //actualizar los datos de la tabla 
+        //actualizar los datos de la tabla
         EmpleadosTableModel etm = (EmpleadosTableModel) tblTodosEmpleados.getModel();
         etm.fireTableDataChanged();
     }
+    
+//</editor-fold>
+ 
+  
+// MENU ########################################################################
+//<editor-fold defaultstate="collapsed" desc="MENU">   
 
-    /**
+    private void miSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSalirActionPerformed
+        if ( confirmar("¿Salir del programa?")) 
+            System.exit(0);
+    }//GEN-LAST:event_miSalirActionPerformed
+
+    private void miTrabajosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miTrabajosActionPerformed
+        //mostrar panel de resulados
+        CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
+        cl.show(panelCardsGeneral, "panelGeneralTrabajos");
+    }//GEN-LAST:event_miTrabajosActionPerformed
+
+    private void miEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpleadosActionPerformed
+        CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
+        cl.show(panelCardsGeneral, "panelGeneralEmpleados");
+    }//GEN-LAST:event_miEmpleadosActionPerformed
+
+    //</editor-fold>
+
+
+//TRABAJOS #####################################################################
+//<editor-fold defaultstate="collapsed" desc="TRABAJOS">  
+
+    //TRABAJO NUEVO ############################################################
+    //<editor-fold defaultstate="collapsed" desc="TRABAJO NUEVO">   
+    
+    
+    private void btnAgregarTrabajoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTrabajoActionPerformed
+        resetearFormNuevoTrabajo();
+    }//GEN-LAST:event_btnAgregarTrabajoActionPerformed
+
+    private void inputNombreTrabajoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputNombreTrabajoKeyReleased
+        String txt = this.inputNombreTrabajo.getText();
+        if (txt == null || txt != "")
+            this.btnGuardarTrabajoNuevo.setEnabled(true);
+        else
+            this.btnGuardarTrabajoNuevo.setEnabled(false);
+    }//GEN-LAST:event_inputNombreTrabajoKeyReleased
+
+    private void btnGuardarTrabajoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarTrabajoNuevoActionPerformed
+        int numero = Integer.parseInt(lbNumeroTrabajo.getText());
+        String nombre = inputNombreTrabajo.getText();
+        if (nombre.length() > 0) {
+            Logica.addTrabajo(new Trabajo(numero, nombre));
+            this.acutalizarTablaTrabajos();
+            resetearFormNuevoTrabajo();
+        }
+    }//GEN-LAST:event_btnGuardarTrabajoNuevoActionPerformed
+//</editor-fold>
+
+
+    //TRABAJO ADMINISTRAR EMPLEADOS ############################################
+    //<editor-fold defaultstate="collapsed" desc="TRABAJO ADMINISTRAR EMPLEADOS">   
+    private void editarTrabajo(int id) {
+
+        this.trabajoSiendoEditado = Logica.getTrabajo(id);
+        if (trabajoSiendoEditado == null) {
+            return;
+        }
+
+        CardLayout cl = (CardLayout) this.panelAccionesTrabajos.getLayout();
+        cl.show(panelAccionesTrabajos, "panelGestionEmpleadosTrabajo");
+        rellenarTablaEmpleadosDeTrabajo(trabajoSiendoEditado.getEmpleados());
+        lbNombreTrabajo.setText(trabajoSiendoEditado.getNombre());
+
+    }
+
+     /**
      * Actualiza la tabla conformando su modelo e introduciendo los datos
      * necesarios
      */
@@ -139,8 +214,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         rowSorter.setSortKeys(sortKeys);
-
     }
+
+
 
     private void actualizarTablaEmpleadosDeTrabajos() {
         //actualizar los datos de la tabla 
@@ -151,6 +227,444 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         }
     }
 
+
+
+
+    private void btnGestionarEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarEmpleadosActionPerformed
+        int filaSeleccionada = this.tblTrabajos.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            return;//no hacer nada si no hay fila seleccionada
+        }        //Hace conversion segun el modelo de tabla
+        int filaCorrecta = this.tblTrabajos.convertRowIndexToModel(filaSeleccionada);
+        int idTrabajo = (int) this.tblTrabajos.getValueAt(filaCorrecta, 0);
+        editarTrabajo(idTrabajo);
+
+    }//GEN-LAST:event_btnGestionarEmpleadosActionPerformed
+
+
+
+
+
+
+    private void btnDesasignarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesasignarActionPerformed
+        int filaSeleccionada = this.tblEmpleadosDeTrabajo.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            return;//no hacer nada si no hay fila seleccionada
+        }        //Hace conversion segun el modelo de tabla
+        int filaCorrecta = this.tblEmpleadosDeTrabajo.convertRowIndexToModel(filaSeleccionada);
+        int idEmpleado = (int) this.tblEmpleadosDeTrabajo.getModel().getValueAt(filaCorrecta, 0);
+        Logica.desasignarEmpleadoDeTrabajo(idEmpleado, this.trabajoSiendoEditado.getNumero());
+        this.actualizarTablaEmpleadosDeTrabajos();
+        this.acutalizarTablaTrabajos();
+    }//GEN-LAST:event_btnDesasignarActionPerformed
+//</editor-fold>
+
+//</editor-fold>
+
+//EMPLEADOS ####################################################################
+//<editor-fold defaultstate="collapsed" desc="EMPLEADOS">  
+//EMPLEADOS FILTRAR ############################################################
+    //<editor-fold defaultstate="collapsed" desc="EMPLEADOS FILTRAR">  
+    private void btnBuscarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarFiltroActionPerformed
+        filtrarEmpleados();
+    }//GEN-LAST:event_btnBuscarFiltroActionPerformed
+
+
+    private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
+        if (busqueda.getText().length() > 0)
+            btnBuscarFiltro.setEnabled(true);
+        else {
+            btnBuscarFiltro.setEnabled(false);
+            filtrarEmpleados();
+        }
+    }//GEN-LAST:event_busquedaKeyReleased
+
+
+    private void filtrarEmpleados() {
+        String txtFiltro = this.busqueda.getText();
+        int indiceFiltro = 2;
+        //gestion del radiobutton group para la seleccion de sexo
+        ButtonModel seleccionado = this.rgFiltro.getSelection();
+        if (seleccionado == null) {
+            return;
+        }
+        String columna = seleccionado.getActionCommand();
+        switch (columna) {
+            case "Apellido":
+                indiceFiltro = 2;
+                break;
+            case "DNI":
+                indiceFiltro = 3;
+                break;
+            case "Sueldo":
+                indiceFiltro = 4;
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        RowFilter<EmpleadosTableModel, Integer> rf = RowFilter.regexFilter(txtFiltro, indiceFiltro);
+        TableRowSorter<EmpleadosTableModel> rs = (TableRowSorter<EmpleadosTableModel>) tblTodosEmpleados.getRowSorter();
+        rs.setRowFilter(rf);
+    }
+//</editor-fold>
+
+//EMPLEADOS OPERACIONES UTILES##################################################
+    //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACIONES UTILES">  
+    private void empleadoSeleccionado(int idEmpleado) {
+        empleadoSiendoEditado = Logica.getEmpleado(idEmpleado);
+        rellenarFichaEmpleado();
+    }
+
+
+    private void btnOperacionesActDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOperacionesActDesActionPerformed
+
+        if (this.operacionesActivadas) {
+            desactivarOperaciones();
+        } else {
+            activarOperaciones();
+        }
+    }//GEN-LAST:event_btnOperacionesActDesActionPerformed
+
+
+    private void activarOperaciones() {
+        this.operacionesActivadas = true;
+        btnOperacionesActDes.setText("Operaciones: Desactivar");
+        activarOpciones();
+    }
+
+    private void desactivarOperaciones() {
+            this.operacionesActivadas = false;
+            btnOperacionesActDes.setText("Operaciones: Activar");
+            desactivarOpciones();
+    }
+
+
+    /**
+     * Resetea el formulario de agregar un trabajo
+     */
+    private void resetearFormNuevoTrabajo() {
+        CardLayout cl = (CardLayout) this.panelAccionesTrabajos.getLayout();
+        cl.show(panelAccionesTrabajos, "panelAgregarTrabajo");
+
+        this.lbNumeroTrabajo.setText("" + Logica.proximaIdTrabajo);
+        this.inputNombreTrabajo.setText("");
+        this.btnGuardarTrabajoNuevo.setEnabled(false);
+    }
+
+
+
+
+    private void rellenarFichaEmpleado() {
+        inputNombreEmpleado.setText(empleadoSiendoEditado.getNombre());
+        inputApellidosEmpleado.setText(empleadoSiendoEditado.getApellidos());
+        inputDniEmpleado.setText(empleadoSiendoEditado.getDni());
+        inputSueldoEmpleado.setText("" + empleadoSiendoEditado.getSueldo());
+        inputIdEmpleado.setText("" + empleadoSiendoEditado.getId());
+
+        lbFichaEmpleado.setEnabled(true);
+        lbFichaEmpNombre.setEnabled(true);
+        lbFichaEmpApellidos.setEnabled(true);
+        lbFichaEmpDNI.setEnabled(true);
+        lbFichaEmpSueldo.setEnabled(true);
+        lbFichaEmpID.setEnabled(true);
+        inputNombreEmpleado.setEnabled(true);
+        inputApellidosEmpleado.setEnabled(true);
+        inputDniEmpleado.setEnabled(true);
+        inputSueldoEmpleado.setEnabled(true);
+        inputIdEmpleado.setEnabled(true);
+        setFichaNoEditable();
+    }
+
+    private void vaciarFichaEmpleado() {
+        inputNombreEmpleado.setText("");
+        inputApellidosEmpleado.setText("");
+        inputDniEmpleado.setText("");
+        inputSueldoEmpleado.setText("");
+        inputIdEmpleado.setText("");
+        setFichaNoEditable();
+    }
+
+    private void deshabilitarFichaEmpleado() {
+        lbFichaEmpleado.setEnabled(false);
+        lbFichaEmpNombre.setEnabled(false);
+        lbFichaEmpApellidos.setEnabled(false);
+        lbFichaEmpDNI.setEnabled(false);
+        lbFichaEmpSueldo.setEnabled(false);
+        lbFichaEmpID.setEnabled(false);
+        inputNombreEmpleado.setEnabled(false);
+        inputApellidosEmpleado.setEnabled(false);
+        inputDniEmpleado.setEnabled(false);
+        inputSueldoEmpleado.setEnabled(false);
+        inputIdEmpleado.setEnabled(false);
+        setFichaNoEditable();
+    }
+
+
+
+    private void activarOpciones() {
+        rbModificarEmpleado.setEnabled(true);
+        rbAnadirEmpleado.setEnabled(true);
+        rbAsignarEmpleado.setEnabled(true);
+        rbEliminarEmpleado.setEnabled(true);
+        this.rgOperacionesEmpleado.setSelected(rbModificarEmpleado.getModel(), true);
+        activarOpcionModificarUsuario();
+    }
+
+    private void desactivarOpciones() {
+        rbModificarEmpleado.setEnabled(false);
+        rbAnadirEmpleado.setEnabled(false);
+        rbAsignarEmpleado.setEnabled(false);
+        rbEliminarEmpleado.setEnabled(false);
+        desactivarBotonesOpciones();
+        
+    }
+
+    private void desactivarBotonesOpciones() {
+        btnGuardarCambios.setEnabled(false);
+        btnGuardarEmpleado.setEnabled(false);
+        btnEliminarEmpleado.setEnabled(false);
+        inputNTrabajoEmpleado.setEnabled(false);
+        btnAsignarEmpleado.setEnabled(false);
+        setFichaNoEditable();
+
+    }
+
+
+    private void setFichaNoEditable() {
+        inputNombreEmpleado.setEditable(false);
+        inputApellidosEmpleado.setEditable(false);
+        inputDniEmpleado.setEditable(false);
+        inputSueldoEmpleado.setEditable(false);
+    }
+
+    private void setFichaSiEditable() {
+        inputNombreEmpleado.setEditable(true);
+        inputApellidosEmpleado.setEditable(true);
+        inputDniEmpleado.setEditable(true);
+        inputSueldoEmpleado.setEditable(true);
+    }
+
+    private Empleado recogerFormularioEmpleado() {
+        String nombre = this.inputNombreEmpleado.getText();
+        if (nombre.length() < 1) {
+            msgError("Nombre no válido");
+            return null;
+        }
+
+        String apellidos = this.inputApellidosEmpleado.getText();
+        if (apellidos.length() < 1) {
+            msgError("Apellido no válido");
+            return null;
+        }
+
+        String dni = this.inputDniEmpleado.getText();
+        if (dni.length() < 9) {
+            msgError("Dni no válido. Debe tener al menos 9 caracteres");
+            return null;
+        }
+
+        double sueldo = 0;
+        try {
+            sueldo = Double.parseDouble(this.inputSueldoEmpleado.getText());
+            if (sueldo < 0) {
+                throw new Exception();
+            }
+        } catch (Exception ex) {
+            msgError("Sueldo no válido");
+            return null;
+        }
+        int id = Integer.parseInt(this.inputIdEmpleado.getText());
+
+        return new Empleado(id, nombre, apellidos, dni, sueldo);
+
+    }
+//</editor-fold>
+
+//EMPLEADOS MODIFICAR ##########################################################
+    //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION MODIFICAR">  
+    private void activarOpcionModificarUsuario() {
+        desactivarBotonesOpciones();
+        btnGuardarCambios.setEnabled(true);
+        rellenarFichaEmpleado();
+        setFichaSiEditable();
+    }
+
+    private void rbModificarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbModificarEmpleadoActionPerformed
+        activarOpcionModificarUsuario();
+    }//GEN-LAST:event_rbModificarEmpleadoActionPerformed
+
+
+    private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
+        Empleado e = recogerFormularioEmpleado();
+        if (e != null) {
+            Logica.modificaEmpleado(e);
+            msgInfo("Empleado modificado");
+            actualizarTablaTodosEmpleados();
+            actualizarTablaEmpleadosDeTrabajos();
+        }
+    }//GEN-LAST:event_btnGuardarCambiosActionPerformed
+//</editor-fold>
+
+//EMPLEADOS ANADIR #############################################################
+    //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ANADIR">  
+
+    private void activarOpcionAnadirUsuario() {
+        desactivarBotonesOpciones();
+        btnGuardarEmpleado.setEnabled(true);
+        vaciarFichaEmpleado();
+        inputIdEmpleado.setText(""+Logica.proximaIdEmpleado);
+        setFichaSiEditable();
+    }
+
+    private void rbAnadirEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAnadirEmpleadoActionPerformed
+        activarOpcionAnadirUsuario();
+    }//GEN-LAST:event_rbAnadirEmpleadoActionPerformed
+
+    private void btnGuardarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarEmpleadoActionPerformed
+        Empleado e = recogerFormularioEmpleado();
+        if (e != null) {
+            Logica.addEmpleado(e);
+            msgInfo("Empleado añadido");
+            actualizarTablaTodosEmpleados();
+            actualizarTablaEmpleadosDeTrabajos();
+        }
+    }//GEN-LAST:event_btnGuardarEmpleadoActionPerformed
+//</editor-fold>
+
+//EMPLEADOS ELIMINAR ###########################################################
+    //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ELIMINAR">  
+    private void activarOpcionEliminarEmpleado() {
+        desactivarBotonesOpciones();
+        btnEliminarEmpleado.setEnabled(true);
+        rellenarFichaEmpleado();
+        setFichaNoEditable();
+    }
+
+
+
+    private void rbEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbEliminarEmpleadoActionPerformed
+     activarOpcionEliminarEmpleado();
+    }//GEN-LAST:event_rbEliminarEmpleadoActionPerformed
+
+    private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
+        if (confirmar("Realmente desea borrar el empleado "+empleadoSiendoEditado.getId()+" "+empleadoSiendoEditado.getNombre()+" "+empleadoSiendoEditado.getApellidos())){
+            Logica.eliminarEmpleado(empleadoSiendoEditado);
+            msgInfo("Empleado eliminado");
+            actualizarTablaTodosEmpleados();
+            actualizarTablaEmpleadosDeTrabajos();
+        }
+    }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
+//</editor-fold>
+
+//EMPLEADOS ASIGNAR ############################################################
+    //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ASIGNAR">
+    private void activarOpcionAsignarTrabajoAEmpleado() {
+        desactivarBotonesOpciones();
+        btnAsignarEmpleado.setEnabled(true);
+        inputNTrabajoEmpleado.setEnabled(true);
+        inputNTrabajoEmpleado.setText("");
+        lbOperacionesNtrabajo.setEnabled(true);
+        rellenarFichaEmpleado();
+        setFichaNoEditable();
+    }
+
+    private void rbAsignarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAsignarEmpleadoActionPerformed
+         activarOpcionAsignarTrabajoAEmpleado();
+    }//GEN-LAST:event_rbAsignarEmpleadoActionPerformed
+
+    private void btnAsignarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarEmpleadoActionPerformed
+        int numeroTrabajo=0;
+        try{
+        numeroTrabajo = Integer.parseInt(inputNTrabajoEmpleado.getText());
+        if (numeroTrabajo==0)
+            throw new Exception();
+        }catch (Exception ex){
+            msgError("Numero de trabajo erroneo");
+            return;
+        }
+        Trabajo t = Logica.getTrabajo(numeroTrabajo);
+        if (t==null){
+            msgError("El trabajo "+numeroTrabajo+" no existe");
+            return;
+        }
+        
+        Logica.asignarEmpleadoATrabajo(empleadoSiendoEditado.getId(),numeroTrabajo);
+        msgInfo("Empleado "+empleadoSiendoEditado.getId()+" "+empleadoSiendoEditado.getNombre()+" "+ empleadoSiendoEditado.getApellidos()+" asignado a trabajo "+t.getNumero()+" "+t.getNombre());
+        inputNTrabajoEmpleado.setText("");
+        acutalizarTablaTrabajos();
+    }//GEN-LAST:event_btnAsignarEmpleadoActionPerformed
+    //</editor-fold>
+//</editor-fold>
+    
+// LISTENER TABLAS #############################################################
+//<editor-fold defaultstate="collapsed" desc="LISTENER TABLAS">
+    /*listener clic tablas*/
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        
+        //tabla trabajos
+        if (e.getSource().equals(tblTrabajos.getSelectionModel())) {
+            if (this.tblTrabajos.getSelectedRow() != -1) {
+                btnGestionarEmpleados.setEnabled(true);
+            } else {
+                btnGestionarEmpleados.setEnabled(false);
+            }
+        }
+        
+        //tabla empleados de trabajo
+        else if (e.getSource().equals(tblEmpleadosDeTrabajo.getSelectionModel())) {
+            if (this.tblEmpleadosDeTrabajo.getSelectedRow() != -1) {
+                btnDesasignar.setEnabled(true);
+            } else {
+                btnDesasignar.setEnabled(false);
+            }
+        }
+        
+        //tabla empleados
+        else if (e.getSource().equals(tblTodosEmpleados.getSelectionModel())) {
+            int filaSeleccionada = this.tblTodosEmpleados.getSelectedRow();
+            if (filaSeleccionada != -1) {
+                int filaCorrecta = this.tblTodosEmpleados.convertRowIndexToModel(filaSeleccionada);
+                int idEmpleado = (int) this.tblTodosEmpleados.getModel().getValueAt(filaCorrecta, 0);
+                empleadoSeleccionado(idEmpleado);
+            } else {
+                vaciarFichaEmpleado();
+                deshabilitarFichaEmpleado();
+                desactivarOperaciones();
+            }
+        }
+    }
+//</editor-fold>
+
+// MENSAJES ####################################################################
+//<editor-fold defaultstate="collapsed" desc="MENSAJES INFORMACION">
+    private void msgError(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    private void msgInfo(String msg) {
+        JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    
+    private boolean confirmar(String msg) {
+        Object[] opciones = {"Sí","No"};
+        return JOptionPane.showOptionDialog(this,
+                msg,
+                "Aviso",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                opciones,
+                "default")==JOptionPane.YES_OPTION;
+    }
+//</editor-fold>
+  
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -245,13 +759,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
         tblTrabajos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tblTrabajosScroll.setViewportView(tblTrabajos);
@@ -433,13 +944,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
         tblEmpleadosDeTrabajo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPaneTblEmpleadosDeTrabajo.setViewportView(tblEmpleadosDeTrabajo);
@@ -532,13 +1040,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
         tblTodosEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tblEmpleadosScroll.setViewportView(tblTodosEmpleados);
@@ -751,7 +1256,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         lbFichaEmpleado.setEnabled(false);
 
         btnOperacionesActDes.setText("Operaciones: Activar");
-        btnOperacionesActDes.setEnabled(false);
         btnOperacionesActDes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOperacionesActDesActionPerformed(evt);
@@ -852,14 +1356,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
                 .addGap(42, 42, 42)
                 .addGroup(panelOperacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnAsignarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                    .addGroup(panelOperacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(panelOperacionesLayout.createSequentialGroup()
-                            .addComponent(lbOperacionesNtrabajo)
-                            .addGap(18, 18, 18)
-                            .addComponent(inputNTrabajoEmpleado))
-                        .addComponent(btnEliminarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                        .addComponent(btnGuardarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                        .addComponent(btnGuardarCambios, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)))
+                    .addGroup(panelOperacionesLayout.createSequentialGroup()
+                        .addComponent(lbOperacionesNtrabajo)
+                        .addGap(18, 18, 18)
+                        .addComponent(inputNTrabajoEmpleado))
+                    .addComponent(btnEliminarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                    .addComponent(btnGuardarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                    .addComponent(btnGuardarCambios, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         panelOperacionesLayout.setVerticalGroup(
@@ -987,162 +1490,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void miSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSalirActionPerformed
-        if ( confirmar("Salir del programa?")) 
-            System.exit(0);
-    }//GEN-LAST:event_miSalirActionPerformed
-
-    private void miTrabajosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miTrabajosActionPerformed
-        //mostrar panel de resulados
-        CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
-        cl.show(panelCardsGeneral, "panelGeneralTrabajos");
-    }//GEN-LAST:event_miTrabajosActionPerformed
-
-    private void miEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpleadosActionPerformed
-        CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
-        cl.show(panelCardsGeneral, "panelGeneralEmpleados");
-
-    }//GEN-LAST:event_miEmpleadosActionPerformed
-
-    private void btnAgregarTrabajoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTrabajoActionPerformed
-        resetearFormNuevoTrabajo();
-    }//GEN-LAST:event_btnAgregarTrabajoActionPerformed
-
-    private void inputNombreTrabajoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputNombreTrabajoKeyReleased
-        String txt = this.inputNombreTrabajo.getText();
-        if (txt == null || txt != "")
-            this.btnGuardarTrabajoNuevo.setEnabled(true);
-        else
-            this.btnGuardarTrabajoNuevo.setEnabled(false);
-    }//GEN-LAST:event_inputNombreTrabajoKeyReleased
-
-    private void btnGuardarTrabajoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarTrabajoNuevoActionPerformed
-        int numero = Integer.parseInt(lbNumeroTrabajo.getText());
-        String nombre = inputNombreTrabajo.getText();
-        if (nombre.length() > 0) {
-            Logica.addTrabajo(new Trabajo(numero, nombre));
-            this.acutalizarTablaTrabajos();
-            resetearFormNuevoTrabajo();
-        }
-    }//GEN-LAST:event_btnGuardarTrabajoNuevoActionPerformed
-
-    private void btnGestionarEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarEmpleadosActionPerformed
-        int filaSeleccionada = this.tblTrabajos.getSelectedRow();
-        if (filaSeleccionada == -1) {
-            return;//no hacer nada si no hay fila seleccionada
-        }        //Hace conversión según el modelo de tabla
-        int filaCorrecta = this.tblTrabajos.convertRowIndexToModel(filaSeleccionada);
-        int idTrabajo = (int) this.tblTrabajos.getValueAt(filaCorrecta, 0);
-        editarTrabajo(idTrabajo);
-
-    }//GEN-LAST:event_btnGestionarEmpleadosActionPerformed
-
-    private void btnDesasignarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesasignarActionPerformed
-        int filaSeleccionada = this.tblEmpleadosDeTrabajo.getSelectedRow();
-        if (filaSeleccionada == -1) {
-            return;//no hacer nada si no hay fila seleccionada
-        }        //Hace conversión según el modelo de tabla
-        int filaCorrecta = this.tblEmpleadosDeTrabajo.convertRowIndexToModel(filaSeleccionada);
-        int idEmpleado = (int) this.tblEmpleadosDeTrabajo.getModel().getValueAt(filaCorrecta, 0);
-        Logica.eliminarEmpleadoDeTrabajo(idEmpleado, this.trabajoSiendoEditado.getNumero());
-        this.actualizarTablaEmpleadosDeTrabajos();
-        this.acutalizarTablaTrabajos();
-    }//GEN-LAST:event_btnDesasignarActionPerformed
-
-    private void btnBuscarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarFiltroActionPerformed
-        filtrarEmpleados();
-    }//GEN-LAST:event_btnBuscarFiltroActionPerformed
-
-    private void rbModificarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbModificarEmpleadoActionPerformed
-        activarOpcionModificarUsuario();
-    }//GEN-LAST:event_rbModificarEmpleadoActionPerformed
-
-    private void btnOperacionesActDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOperacionesActDesActionPerformed
-
-        if (this.operacionesActivadas) {
-            desactivarOperaciones();
-        } else {
-            activarOperaciones();
-
-        }
-
-
-    }//GEN-LAST:event_btnOperacionesActDesActionPerformed
-
-    private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
-        if (busqueda.getText().length() > 0)
-            btnBuscarFiltro.setEnabled(true);
-        else {
-            btnBuscarFiltro.setEnabled(false);
-            filtrarEmpleados();
-        }
-    }//GEN-LAST:event_busquedaKeyReleased
-
-    private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
-        Empleado e = recogerFormularioEmpleado();
-        if (e != null) {
-            Logica.modificaEmpleado(e);
-            msgInfo("Empleado modificado");
-            actualizarTablaTodosEmpleados();
-            actualizarTablaEmpleadosDeTrabajos();
-        }
-    }//GEN-LAST:event_btnGuardarCambiosActionPerformed
-
-    private void rbAnadirEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAnadirEmpleadoActionPerformed
-        activarOpcionAnadirUsuario();
-    }//GEN-LAST:event_rbAnadirEmpleadoActionPerformed
-
-    private void btnGuardarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarEmpleadoActionPerformed
-        Empleado e = recogerFormularioEmpleado();
-        if (e != null) {
-            Logica.addEmpleado(e);
-            msgInfo("Empleado añadido");
-            actualizarTablaTodosEmpleados();
-            actualizarTablaEmpleadosDeTrabajos();
-        }
-    }//GEN-LAST:event_btnGuardarEmpleadoActionPerformed
-
-    private void rbEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbEliminarEmpleadoActionPerformed
-     activarOpcionEliminarEmpleado();
-    }//GEN-LAST:event_rbEliminarEmpleadoActionPerformed
-
-    private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
-        if (confirmar("Realmente desea borrar el empleado "+empleadoSiendoEditado.getId()+" "+empleadoSiendoEditado.getNombre()+" "+empleadoSiendoEditado.getApellidos())){
-            Logica.eliminarEmpleado(empleadoSiendoEditado);
-            msgInfo("Empleado eliminado");
-            actualizarTablaTodosEmpleados();
-            actualizarTablaEmpleadosDeTrabajos();
-        }
-    }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
-
-    private void rbAsignarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAsignarEmpleadoActionPerformed
-         activarOpcionAsignarTrabajoAEmpleado();
-    }//GEN-LAST:event_rbAsignarEmpleadoActionPerformed
-
-    private void btnAsignarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarEmpleadoActionPerformed
-        int numeroTrabajo=0;
-        try{
-        numeroTrabajo = Integer.parseInt(inputNTrabajoEmpleado.getText());
-        if (numeroTrabajo==0)
-            throw new Exception();
-        }catch (Exception ex){
-            msgError("Numero de trabajo erroneo");
-            return;
-        }
-        Trabajo t = Logica.getTrabajo(numeroTrabajo);
-        if (t==null){
-            msgError("El trabajo "+numeroTrabajo+" no existe");
-            return;
-        }
-        
-        Logica.asignarEmpleadoATrabajo(empleadoSiendoEditado.getId(),numeroTrabajo);
-        msgInfo("Empleado "+empleadoSiendoEditado.getId()+" "+empleadoSiendoEditado.getNombre()+" "+ empleadoSiendoEditado.getApellidos()+" asignado a trabajo "+t.getNumero()+" "+t.getNombre());
-        inputNTrabajoEmpleado.setText("");
-        acutalizarTablaTrabajos();
-    }//GEN-LAST:event_btnAsignarEmpleadoActionPerformed
-
-    // <editor-fold defaultstate="collapsed" desc="Atributos generados">  
+    // <editor-fold defaultstate="collapsed" desc="ATRIBUTOS AUTOGENERADOS">  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraDeMenu;
     private javax.swing.JButton btnAgregarTrabajo;
@@ -1216,284 +1564,5 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     private javax.swing.JTable tblTrabajos;
     private javax.swing.JScrollPane tblTrabajosScroll;
     // End of variables declaration//GEN-END:variables
-// </editor-fold>  
-
-    private void filtrarEmpleados() {
-        String txtFiltro = this.busqueda.getText();
-        int indiceFiltro = 2;
-        //gestion del radiobutton group para la seleccion de sexo
-        ButtonModel seleccionado = this.rgFiltro.getSelection();
-        if (seleccionado == null) {
-            return;
-        }
-        String columna = seleccionado.getActionCommand();
-        switch (columna) {
-            case "Apellido":
-                indiceFiltro = 2;
-                break;
-            case "DNI":
-                indiceFiltro = 3;
-                break;
-            case "Sueldo":
-                indiceFiltro = 4;
-                break;
-            default:
-                throw new AssertionError();
-        }
-
-        RowFilter<EmpleadosTableModel, Integer> rf = RowFilter.regexFilter(txtFiltro, indiceFiltro);
-        TableRowSorter<EmpleadosTableModel> rs = (TableRowSorter<EmpleadosTableModel>) tblTodosEmpleados.getRowSorter();
-        rs.setRowFilter(rf);
-    }
-
-    /**
-     * Resetea el formulario de agregar un trabajo
-     */
-    private void resetearFormNuevoTrabajo() {
-        CardLayout cl = (CardLayout) this.panelAccionesTrabajos.getLayout();
-        cl.show(panelAccionesTrabajos, "panelAgregarTrabajo");
-
-        this.lbNumeroTrabajo.setText("" + Logica.proximaIdTrabajo);
-        this.inputNombreTrabajo.setText("");
-        this.btnGuardarTrabajoNuevo.setEnabled(false);
-    }
-
-    private void editarTrabajo(int id) {
-
-        this.trabajoSiendoEditado = Logica.getTrabajo(id);
-        if (trabajoSiendoEditado == null) {
-            return;
-        }
-
-        CardLayout cl = (CardLayout) this.panelAccionesTrabajos.getLayout();
-        cl.show(panelAccionesTrabajos, "panelGestionEmpleadosTrabajo");
-        rellenarTablaEmpleadosDeTrabajo(trabajoSiendoEditado.getEmpleados());
-        lbNombreTrabajo.setText(trabajoSiendoEditado.getNombre());
-
-    }
-
-    private void empleadoSeleccionado(int idEmpleado) {
-        empleadoSiendoEditado = Logica.getEmpleado(idEmpleado);
-        btnOperacionesActDes.setEnabled(true);
-        rellenarFichaEmpleado();
-    }
-
-    private void rellenarFichaEmpleado() {
-        inputNombreEmpleado.setText(empleadoSiendoEditado.getNombre());
-        inputApellidosEmpleado.setText(empleadoSiendoEditado.getApellidos());
-        inputDniEmpleado.setText(empleadoSiendoEditado.getDni());
-        inputSueldoEmpleado.setText("" + empleadoSiendoEditado.getSueldo());
-        inputIdEmpleado.setText("" + empleadoSiendoEditado.getId());
-
-        lbFichaEmpleado.setEnabled(true);
-        lbFichaEmpNombre.setEnabled(true);
-        lbFichaEmpApellidos.setEnabled(true);
-        lbFichaEmpDNI.setEnabled(true);
-        lbFichaEmpSueldo.setEnabled(true);
-        lbFichaEmpID.setEnabled(true);
-        inputNombreEmpleado.setEnabled(true);
-        inputApellidosEmpleado.setEnabled(true);
-        inputDniEmpleado.setEnabled(true);
-        inputSueldoEmpleado.setEnabled(true);
-        inputIdEmpleado.setEnabled(true);
-        setFichaNoEditable();
-    }
-
-    private void vaciarFichaEmpleado() {
-        inputNombreEmpleado.setText("");
-        inputApellidosEmpleado.setText("");
-        inputDniEmpleado.setText("");
-        inputSueldoEmpleado.setText("");
-        inputIdEmpleado.setText("");
-        setFichaNoEditable();
-    }
-
-    private void deshabilitarFichaEmpleado() {
-        lbFichaEmpleado.setEnabled(false);
-        lbFichaEmpNombre.setEnabled(false);
-        lbFichaEmpApellidos.setEnabled(false);
-        lbFichaEmpDNI.setEnabled(false);
-        lbFichaEmpSueldo.setEnabled(false);
-        lbFichaEmpID.setEnabled(false);
-        inputNombreEmpleado.setEnabled(false);
-        inputApellidosEmpleado.setEnabled(false);
-        inputDniEmpleado.setEnabled(false);
-        inputSueldoEmpleado.setEnabled(false);
-        inputIdEmpleado.setEnabled(false);
-        setFichaNoEditable();
-    }
-
-    private void desactivarOpciones() {
-        rbModificarEmpleado.setEnabled(false);
-        rbAnadirEmpleado.setEnabled(false);
-        rbAsignarEmpleado.setEnabled(false);
-        rbEliminarEmpleado.setEnabled(false);
-        desactivarBotonesOpciones();
-        
-    }
-
-    private void desactivarBotonesOpciones() {
-        btnGuardarCambios.setEnabled(false);
-        btnGuardarEmpleado.setEnabled(false);
-        btnEliminarEmpleado.setEnabled(false);
-        inputNTrabajoEmpleado.setEnabled(false);
-        btnAsignarEmpleado.setEnabled(false);
-        setFichaNoEditable();
-
-    }
-
-    private void activarOpciones() {
-        rbModificarEmpleado.setEnabled(true);
-        rbAnadirEmpleado.setEnabled(true);
-        rbAsignarEmpleado.setEnabled(true);
-        rbEliminarEmpleado.setEnabled(true);
-        this.rgOperacionesEmpleado.setSelected(rbModificarEmpleado.getModel(), true);
-        activarOpcionModificarUsuario();
-    }
-
-    private void activarOpcionModificarUsuario() {
-        desactivarBotonesOpciones();
-        btnGuardarCambios.setEnabled(true);
-        rellenarFichaEmpleado();
-        setFichaSiEditable();
-    }
-
-    private void setFichaNoEditable() {
-        inputNombreEmpleado.setEditable(false);
-        inputApellidosEmpleado.setEditable(false);
-        inputDniEmpleado.setEditable(false);
-        inputSueldoEmpleado.setEditable(false);
-    }
-
-    private void setFichaSiEditable() {
-        inputNombreEmpleado.setEditable(true);
-        inputApellidosEmpleado.setEditable(true);
-        inputDniEmpleado.setEditable(true);
-        inputSueldoEmpleado.setEditable(true);
-    }
-
-    private Empleado recogerFormularioEmpleado() {
-        String nombre = this.inputNombreEmpleado.getText();
-        if (nombre.length() < 1) {
-            msgError("Nombre no valido");
-            return null;
-        }
-
-        String apellidos = this.inputApellidosEmpleado.getText();
-        if (apellidos.length() < 1) {
-            msgError("Apellido no valido");
-            return null;
-        }
-
-        String dni = this.inputDniEmpleado.getText();
-        if (dni.length() < 9) {
-            msgError("Dni no valido. Debe tener al menos 9 caracteres");
-            return null;
-        }
-
-        double sueldo = 0;
-        try {
-            sueldo = Double.parseDouble(this.inputSueldoEmpleado.getText());
-            if (sueldo < 0) {
-                throw new Exception();
-            }
-        } catch (Exception ex) {
-            msgError("Sueldo no válido");
-            return null;
-        }
-        int id = Integer.parseInt(this.inputIdEmpleado.getText());
-
-        return new Empleado(id, nombre, apellidos, dni, sueldo);
-
-    }
-
-    private void msgError(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void msgInfo(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.INFORMATION_MESSAGE);
-    }
-    /*listener clic tablas*/
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-
-        //tabla trabajos
-        if (e.getSource().equals(tblTrabajos.getSelectionModel())) {
-            if (this.tblTrabajos.getSelectedRow() != -1) {
-                btnGestionarEmpleados.setEnabled(true);
-            } else {
-                btnGestionarEmpleados.setEnabled(false);
-            }
-        } //tabla empleados de trabajo
-        else if (e.getSource().equals(tblEmpleadosDeTrabajo.getSelectionModel())) {
-            if (this.tblEmpleadosDeTrabajo.getSelectedRow() != -1) {
-                btnDesasignar.setEnabled(true);
-            } else {
-                btnDesasignar.setEnabled(false);
-            }
-        } //tabla empleados
-        else if (e.getSource().equals(tblTodosEmpleados.getSelectionModel())) {
-            int filaSeleccionada = this.tblTodosEmpleados.getSelectedRow();
-            if (filaSeleccionada != -1) {
-                int filaCorrecta = this.tblTodosEmpleados.convertRowIndexToModel(filaSeleccionada);
-                int idEmpleado = (int) this.tblTodosEmpleados.getModel().getValueAt(filaCorrecta, 0);
-                empleadoSeleccionado(idEmpleado);
-            } else {
-                btnOperacionesActDes.setEnabled(false);
-                vaciarFichaEmpleado();
-                deshabilitarFichaEmpleado();
-                desactivarOperaciones();
-            }
-        }
-    }
-
-    private void activarOperaciones() {
-        this.operacionesActivadas = true;
-        btnOperacionesActDes.setText("Operaciones: Desactivar");
-        activarOpciones();
-    }
-
-    private void desactivarOperaciones() {
-            this.operacionesActivadas = false;
-            btnOperacionesActDes.setText("Operaciones: Activar");
-            desactivarOpciones();
-    }
-
-    private void activarOpcionAnadirUsuario() {
-        desactivarBotonesOpciones();
-        btnGuardarEmpleado.setEnabled(true);
-        vaciarFichaEmpleado();
-        inputIdEmpleado.setText(""+Logica.proximaIdEmpleado);
-        setFichaSiEditable();
-    }
-
-    private void activarOpcionEliminarEmpleado() {
-        desactivarBotonesOpciones();
-        btnEliminarEmpleado.setEnabled(true);
-        rellenarFichaEmpleado();
-        setFichaNoEditable();
-    }
-
-    private boolean confirmar(String msg) {
-        Object[] opciones = {"Sí","No"};
-        return JOptionPane.showOptionDialog(this,
-                msg, 
-                "Aviso",
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.WARNING_MESSAGE,
-                null, 
-                opciones,
-                "default")==JOptionPane.YES_OPTION;
-    }
-
-    private void activarOpcionAsignarTrabajoAEmpleado() {
-        desactivarBotonesOpciones();
-        btnAsignarEmpleado.setEnabled(true);
-        inputNTrabajoEmpleado.setEnabled(true);
-        inputNTrabajoEmpleado.setText("");
-        lbOperacionesNtrabajo.setEnabled(true);
-        rellenarFichaEmpleado();
-        setFichaNoEditable();
-    }
+// </editor-fold>     
 }
