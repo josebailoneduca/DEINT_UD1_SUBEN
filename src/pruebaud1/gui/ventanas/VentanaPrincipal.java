@@ -41,7 +41,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         initPropio();
     }
 
-//INICIALIZACION ###############################################################
+//###############################################################
 //<editor-fold defaultstate="collapsed" desc="INICIALIZACION">
    
     /**
@@ -130,7 +130,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }
 
 //</editor-fold>
-// MENU ########################################################################
+//########################################################################
 //<editor-fold defaultstate="collapsed" desc="MENU">   
 
     /**
@@ -162,9 +162,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_miEmpleadosActionPerformed
 
     //</editor-fold>
-//TRABAJOS #####################################################################
+//#####################################################################
 //<editor-fold defaultstate="collapsed" desc="TRABAJOS">  
-    //TRABAJO NUEVO ############################################################
+    //############################################################
     //<editor-fold defaultstate="collapsed" desc="TRABAJO NUEVO">   
 
     /**
@@ -205,7 +205,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_btnGuardarTrabajoNuevoActionPerformed
 //</editor-fold>
 
-    //TRABAJO ADMINISTRAR EMPLEADOS ############################################
+    //############################################
     //<editor-fold defaultstate="collapsed" desc="TRABAJO ADMINISTRAR EMPLEADOS">   
     private void editarTrabajo(int id) {
 
@@ -277,15 +277,23 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 //</editor-fold>
 
 //</editor-fold>
-//EMPLEADOS ####################################################################
+//####################################################################
 //<editor-fold defaultstate="collapsed" desc="EMPLEADOS">  
-//EMPLEADOS FILTRAR ############################################################
+//EMPLEADOS ############################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS FILTRAR">  
+    /**
+     * Activa el filtro en funcion del contenido actual del campo de busquda
+     * @param evt 
+     */
     private void btnBuscarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarFiltroActionPerformed
         filtrarEmpleados();
     }//GEN-LAST:event_btnBuscarFiltroActionPerformed
 
-
+    /**
+     * Escucha de la tecla en el campo de busqueda. activa y desactiva el boton
+     * de busqueda y filtra los empleados automaticamente cuando no hay testo
+     * @param evt 
+     */
     private void busquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_busquedaKeyReleased
         if (busqueda.getText().length() > 0)
             btnBuscarFiltro.setEnabled(true);
@@ -295,6 +303,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         }
     }//GEN-LAST:event_busquedaKeyReleased
 
+    /**
+     * Establece el filtro a usar por la tabla de empleados en funcion de lo 
+     * seleccionado
+     */
     private void filtrarEmpleados() {
         String txtFiltro = this.busqueda.getText();
         int indiceFiltro = 2;
@@ -324,15 +336,23 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }
 //</editor-fold>
 
-//EMPLEADOS OPERACIONES UTILES##################################################
+//##################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACIONES UTILES">  
+    
+    /**
+     * Funcion activada cuando se selecciona un empleado en la tabla de empleados.
+     * Recoge el empleado de la logica y relleta la ficha de empleado.
+     *  
+     * @param idEmpleado Id del empleado 
+     */
     private void empleadoSeleccionado(int idEmpleado) {
         empleadoSiendoEditado = Logica.getEmpleado(idEmpleado);
         rellenarFichaEmpleado();
     }
 
     /**
-     * Evento al pulsar el boton de activar y desactivar operaciones
+     * Evento al pulsar el boton de activar y desactivar operaciones.
+     * Activa o desactiva las operaciones
      *
      * @param evt
      */
@@ -345,7 +365,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         }
     }//GEN-LAST:event_btnOperacionesActDesActionPerformed
    
-    
+   
+    /**
+     * Activa las operaciones. Pone los radiobuttons en habilitadoy activa la opcion
+     * de modificar si hay algun empleado siendo editado. En caso contrario
+     * habilita solo el radioutton de anadir usuario y activa la accion de anadir
+     * usuario
+     */
     private void activarOperaciones() {
         activarBotonOperaciones();
         if (empleadoSiendoEditado != null) {
@@ -510,7 +536,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }
 //</editor-fold>
 
-//EMPLEADOS MODIFICAR ##########################################################
+//##########################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION MODIFICAR">  
     private void activarOpcionModificarEmpleado() {
         desactivarBotonesOperaciones();
@@ -535,7 +561,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_btnGuardarCambiosActionPerformed
 //</editor-fold>
 
-//EMPLEADOS ANADIR #############################################################
+//#############################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ANADIR">  
     private void activarOpcionAnadirUsuario() {
         activarBotonOperaciones();
@@ -566,7 +592,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_btnGuardarEmpleadoActionPerformed
 //</editor-fold>
 
-//EMPLEADOS ELIMINAR ###########################################################
+//###########################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ELIMINAR">  
     private void activarOpcionEliminarEmpleado() {
         desactivarBotonesOperaciones();
@@ -591,7 +617,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
 //</editor-fold>
 
-//EMPLEADOS ASIGNAR ############################################################
+//############################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ASIGNAR">
     private void activarOpcionAsignarTrabajoAEmpleado() {
         desactivarBotonesOperaciones();
@@ -632,7 +658,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     //</editor-fold>
 //</editor-fold>
 
-// LISTENER TABLAS #############################################################
+//#############################################################
 //<editor-fold defaultstate="collapsed" desc="LISTENER TABLAS">
     /*listener clic tablas*/
     @Override
@@ -671,7 +697,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }
 //</editor-fold>
 
-// MENSAJES ####################################################################
+//####################################################################
 //<editor-fold defaultstate="collapsed" desc="MENSAJES INFORMACION">
     private void msgError(String msg) {
         JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.ERROR_MESSAGE);
