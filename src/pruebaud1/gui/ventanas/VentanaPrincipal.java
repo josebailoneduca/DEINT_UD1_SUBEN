@@ -43,11 +43,11 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
 //INICIALIZACION ###############################################################
 //<editor-fold defaultstate="collapsed" desc="INICIALIZACION">
-    
-    
+   
     /**
-     * Inicializar estado inicial: -Inicializar tablas -Limpieza formulario
-     * insercion
+     * Inicializar estado inicial: 
+     * -Inicializar tablas 
+     * -Limpieza formulario
      */
     private void initPropio() {
         inicializarTablaTrabajos();
@@ -55,9 +55,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         inicializarTablaTodosEmpleados();
         resetearFormNuevoTrabajo();
     }
-    
+
     /**
-     * Actualiza la tabla conformando su modelo e introduciendo los datos
+     * Inicializa la tabla de trabajos conformando su modelo e introduciendo los datos
      * necesarios
      */
     private void inicializarTablaTrabajos() {
@@ -65,37 +65,39 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         TrabajosTableModel etm = new TrabajosTableModel(Logica.getTrabajos());
         //establecer el modelo como modelo de la tabla
         this.tblTrabajos.setModel(etm);
-        
+
         //crear sorter
         TableRowSorter<TrabajosTableModel> rowSorter = new TableRowSorter<>(etm);
         this.tblTrabajos.setRowSorter(rowSorter);
-        
+
         //ordenacion por defecto inicial
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         rowSorter.setSortKeys(sortKeys);
-        
+
         //listener de seleccion de fila
         this.tblTrabajos.getSelectionModel().addListSelectionListener(this);
     }
     
+    /**
+     * Actualiza la tabla de trabajos
+     */
     private void acutalizarTablaTrabajos() {
         //actualizar los datos de la tabla
         TrabajosTableModel etm = (TrabajosTableModel) tblTrabajos.getModel();
         etm.fireTableDataChanged();
     }
-    
+
     /**
-     * Actualiza la tabla conformando su modelo e introduciendo los datos
-     * necesarios
+     * Establece un modelo preliminar para la tabla de empleados de un trabajo
      */
     private void inicializarTablaEmpleadosDeTrabajo() {
         //listener de seleccion de fila
         this.tblEmpleadosDeTrabajo.getSelectionModel().addListSelectionListener(this);
     }
-    
+
     /**
-     * Actualiza la tabla conformando su modelo e introduciendo los datos
+     * Inicializa la tabla de todos los empleados conformando su modelo e introduciendo los datos
      * necesarios
      */
     private void inicializarTablaTodosEmpleados() {
@@ -103,63 +105,82 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         EmpleadosTableModel etm = new EmpleadosTableModel(Logica.getEmpleados());
         //establecer el modelo como modelo de la tabla
         this.tblTodosEmpleados.setModel(etm);
-        
+
         //crear sorter
         TableRowSorter<EmpleadosTableModel> rowSorter = new TableRowSorter<>(etm);
         this.tblTodosEmpleados.setRowSorter(rowSorter);
-        
+
         //ordenacion por defecto inicial
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         rowSorter.setSortKeys(sortKeys);
-        
+
         //listener de seleccion de fila
         this.tblTodosEmpleados.getSelectionModel().addListSelectionListener(this);
-        
+
     }
-    
+
+    /**
+     * Actualiza la tabla de todos los empleados
+     */
     private void actualizarTablaTodosEmpleados() {
         //actualizar los datos de la tabla
         EmpleadosTableModel etm = (EmpleadosTableModel) tblTodosEmpleados.getModel();
         etm.fireTableDataChanged();
     }
-    
+
 //</editor-fold>
- 
-  
 // MENU ########################################################################
 //<editor-fold defaultstate="collapsed" desc="MENU">   
 
+    /**
+     * Elemento de menu de salir
+     * @param evt 
+     */
     private void miSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSalirActionPerformed
-        if ( confirmar("¿Salir del programa?")) 
+        if (confirmar("¿Salir del programa?"))
             System.exit(0);
     }//GEN-LAST:event_miSalirActionPerformed
 
+    /**
+     * Elemento de menu de trabajo
+     * @param evt 
+     */
     private void miTrabajosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miTrabajosActionPerformed
         //mostrar panel de resulados
         CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
         cl.show(panelCardsGeneral, "panelGeneralTrabajos");
     }//GEN-LAST:event_miTrabajosActionPerformed
 
+    /**
+     * Elemento de menu de empleados
+     * @param evt 
+     */
     private void miEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpleadosActionPerformed
         CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
         cl.show(panelCardsGeneral, "panelGeneralEmpleados");
     }//GEN-LAST:event_miEmpleadosActionPerformed
 
     //</editor-fold>
-
-
 //TRABAJOS #####################################################################
 //<editor-fold defaultstate="collapsed" desc="TRABAJOS">  
-
     //TRABAJO NUEVO ############################################################
     //<editor-fold defaultstate="collapsed" desc="TRABAJO NUEVO">   
-    
-    
+
+    /**
+     * Boton agregar trabajo. Muestra y reinicia el formulario de agregar un
+     * trabajo
+     * @param evt 
+     */
     private void btnAgregarTrabajoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarTrabajoActionPerformed
         resetearFormNuevoTrabajo();
     }//GEN-LAST:event_btnAgregarTrabajoActionPerformed
 
+    /**
+     * Escucha de la tecla en la entrada de nombre de trabajo para deshabilitar
+     * el boton de guardar trabajo si el nombre esta vacio
+     * @param evt 
+     */
     private void inputNombreTrabajoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputNombreTrabajoKeyReleased
         String txt = this.inputNombreTrabajo.getText();
         if (txt == null || txt != "")
@@ -168,6 +189,11 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
             this.btnGuardarTrabajoNuevo.setEnabled(false);
     }//GEN-LAST:event_inputNombreTrabajoKeyReleased
 
+    
+    /**
+     * Boton de guardar el nuevo trabajo
+     * @param evt 
+     */
     private void btnGuardarTrabajoNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarTrabajoNuevoActionPerformed
         int numero = Integer.parseInt(lbNumeroTrabajo.getText());
         String nombre = inputNombreTrabajo.getText();
@@ -178,7 +204,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         }
     }//GEN-LAST:event_btnGuardarTrabajoNuevoActionPerformed
 //</editor-fold>
-
 
     //TRABAJO ADMINISTRAR EMPLEADOS ############################################
     //<editor-fold defaultstate="collapsed" desc="TRABAJO ADMINISTRAR EMPLEADOS">   
@@ -196,7 +221,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
     }
 
-     /**
+    /**
      * Actualiza la tabla conformando su modelo e introduciendo los datos
      * necesarios
      */
@@ -216,8 +241,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         rowSorter.setSortKeys(sortKeys);
     }
 
-
-
     private void actualizarTablaEmpleadosDeTrabajos() {
         //actualizar los datos de la tabla 
         try {
@@ -226,8 +249,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         } catch (ClassCastException ex) {
         }
     }
-
-
 
 
     private void btnGestionarEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarEmpleadosActionPerformed
@@ -240,10 +261,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         editarTrabajo(idTrabajo);
 
     }//GEN-LAST:event_btnGestionarEmpleadosActionPerformed
-
-
-
-
 
 
     private void btnDesasignarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDesasignarActionPerformed
@@ -260,7 +277,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 //</editor-fold>
 
 //</editor-fold>
-
 //EMPLEADOS ####################################################################
 //<editor-fold defaultstate="collapsed" desc="EMPLEADOS">  
 //EMPLEADOS FILTRAR ############################################################
@@ -278,7 +294,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
             filtrarEmpleados();
         }
     }//GEN-LAST:event_busquedaKeyReleased
-
 
     private void filtrarEmpleados() {
         String txtFiltro = this.busqueda.getText();
@@ -316,7 +331,11 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         rellenarFichaEmpleado();
     }
 
-
+    /**
+     * Evento al pulsar el boton de activar y desactivar operaciones
+     *
+     * @param evt
+     */
     private void btnOperacionesActDesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOperacionesActDesActionPerformed
 
         if (this.operacionesActivadas) {
@@ -325,20 +344,56 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
             activarOperaciones();
         }
     }//GEN-LAST:event_btnOperacionesActDesActionPerformed
-
-
+   
+    
     private void activarOperaciones() {
+        activarBotonOperaciones();
+        if (empleadoSiendoEditado != null) {
+            rbModificarEmpleado.setEnabled(true);
+            rbAnadirEmpleado.setEnabled(true);
+            rbAsignarEmpleado.setEnabled(true);
+            rbEliminarEmpleado.setEnabled(true);
+            this.rgOperacionesEmpleado.setSelected(rbModificarEmpleado.getModel(), true);
+            activarOpcionModificarEmpleado();
+        } else {
+            rbAnadirEmpleado.setEnabled(true);
+            this.rgOperacionesEmpleado.setSelected(rbAnadirEmpleado.getModel(), true);
+            activarOpcionAnadirUsuario();
+        }
+    }
+    
+    
+    private void activarBotonOperaciones(){
         this.operacionesActivadas = true;
         btnOperacionesActDes.setText("Operaciones: Desactivar");
-        activarOpciones();
     }
-
+    
+    private void desactivarBotonOperaciones(){
+                this.operacionesActivadas = false;
+        btnOperacionesActDes.setText("Operaciones: Activar");
+    }
+    
     private void desactivarOperaciones() {
-            this.operacionesActivadas = false;
-            btnOperacionesActDes.setText("Operaciones: Activar");
-            desactivarOpciones();
+        this.operacionesActivadas = false;
+        btnOperacionesActDes.setText("Operaciones: Activar");
+        rbModificarEmpleado.setEnabled(false);
+        rbAnadirEmpleado.setEnabled(false);
+        rbAsignarEmpleado.setEnabled(false);
+        rbEliminarEmpleado.setEnabled(false);
+        desactivarBotonesOperaciones();
+        vaciarFichaEmpleado();
+        deshabilitarFichaEmpleado();
     }
+    private void desactivarBotonesOperaciones() {
+        btnGuardarCambios.setEnabled(false);
+        btnGuardarEmpleado.setEnabled(false);
+        btnEliminarEmpleado.setEnabled(false);
+        lbOperacionesNtrabajo.setEnabled(false);
+        inputNTrabajoEmpleado.setEnabled(false);
+        btnAsignarEmpleado.setEnabled(false);
+        setFichaNoEditable();
 
+    }
 
     /**
      * Resetea el formulario de agregar un trabajo
@@ -352,16 +407,30 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         this.btnGuardarTrabajoNuevo.setEnabled(false);
     }
 
-
-
-
+    
     private void rellenarFichaEmpleado() {
         inputNombreEmpleado.setText(empleadoSiendoEditado.getNombre());
         inputApellidosEmpleado.setText(empleadoSiendoEditado.getApellidos());
         inputDniEmpleado.setText(empleadoSiendoEditado.getDni());
         inputSueldoEmpleado.setText("" + empleadoSiendoEditado.getSueldo());
         inputIdEmpleado.setText("" + empleadoSiendoEditado.getId());
+        habilitarFichaEmpleado();
+        setFichaNoEditable();
+    }
 
+    
+    private void vaciarFichaEmpleado() {
+        habilitarFichaEmpleado();
+        inputNombreEmpleado.setText("");
+        inputApellidosEmpleado.setText("");
+        inputDniEmpleado.setText("");
+        inputSueldoEmpleado.setText("");
+        inputIdEmpleado.setText("");
+        setFichaNoEditable();
+    }
+
+    
+    private void habilitarFichaEmpleado() {
         lbFichaEmpleado.setEnabled(true);
         lbFichaEmpNombre.setEnabled(true);
         lbFichaEmpApellidos.setEnabled(true);
@@ -373,16 +442,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         inputDniEmpleado.setEnabled(true);
         inputSueldoEmpleado.setEnabled(true);
         inputIdEmpleado.setEnabled(true);
-        setFichaNoEditable();
-    }
-
-    private void vaciarFichaEmpleado() {
-        inputNombreEmpleado.setText("");
-        inputApellidosEmpleado.setText("");
-        inputDniEmpleado.setText("");
-        inputSueldoEmpleado.setText("");
-        inputIdEmpleado.setText("");
-        setFichaNoEditable();
     }
 
     private void deshabilitarFichaEmpleado() {
@@ -401,36 +460,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }
 
 
-
-    private void activarOpciones() {
-        rbModificarEmpleado.setEnabled(true);
-        rbAnadirEmpleado.setEnabled(true);
-        rbAsignarEmpleado.setEnabled(true);
-        rbEliminarEmpleado.setEnabled(true);
-        this.rgOperacionesEmpleado.setSelected(rbModificarEmpleado.getModel(), true);
-        activarOpcionModificarUsuario();
-    }
-
-    private void desactivarOpciones() {
-        rbModificarEmpleado.setEnabled(false);
-        rbAnadirEmpleado.setEnabled(false);
-        rbAsignarEmpleado.setEnabled(false);
-        rbEliminarEmpleado.setEnabled(false);
-        desactivarBotonesOpciones();
-        
-    }
-
-    private void desactivarBotonesOpciones() {
-        btnGuardarCambios.setEnabled(false);
-        btnGuardarEmpleado.setEnabled(false);
-        btnEliminarEmpleado.setEnabled(false);
-        inputNTrabajoEmpleado.setEnabled(false);
-        btnAsignarEmpleado.setEnabled(false);
-        setFichaNoEditable();
-
-    }
-
-
     private void setFichaNoEditable() {
         inputNombreEmpleado.setEditable(false);
         inputApellidosEmpleado.setEditable(false);
@@ -445,7 +474,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         inputSueldoEmpleado.setEditable(true);
     }
 
-    private Empleado recogerFormularioEmpleado() {
+    private Empleado recogerDatosFormularioEmpleado() {
         String nombre = this.inputNombreEmpleado.getText();
         if (nombre.length() < 1) {
             msgError("Nombre no válido");
@@ -483,20 +512,20 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
 //EMPLEADOS MODIFICAR ##########################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION MODIFICAR">  
-    private void activarOpcionModificarUsuario() {
-        desactivarBotonesOpciones();
+    private void activarOpcionModificarEmpleado() {
+        desactivarBotonesOperaciones();
         btnGuardarCambios.setEnabled(true);
         rellenarFichaEmpleado();
         setFichaSiEditable();
     }
 
     private void rbModificarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbModificarEmpleadoActionPerformed
-        activarOpcionModificarUsuario();
+        activarOpcionModificarEmpleado();
     }//GEN-LAST:event_rbModificarEmpleadoActionPerformed
 
 
     private void btnGuardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCambiosActionPerformed
-        Empleado e = recogerFormularioEmpleado();
+        Empleado e = recogerDatosFormularioEmpleado();
         if (e != null) {
             Logica.modificaEmpleado(e);
             msgInfo("Empleado modificado");
@@ -508,12 +537,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
 //EMPLEADOS ANADIR #############################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ANADIR">  
-
     private void activarOpcionAnadirUsuario() {
-        desactivarBotonesOpciones();
+        activarBotonOperaciones();
+        desactivarBotonesOperaciones();
+        rbAnadirEmpleado.setEnabled(true);
+        rgOperacionesEmpleado.setSelected( rbAnadirEmpleado.getModel(), true);
         btnGuardarEmpleado.setEnabled(true);
         vaciarFichaEmpleado();
-        inputIdEmpleado.setText(""+Logica.proximaIdEmpleado);
+        inputIdEmpleado.setText("" + Logica.proximaIdEmpleado);
         setFichaSiEditable();
     }
 
@@ -522,12 +553,15 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_rbAnadirEmpleadoActionPerformed
 
     private void btnGuardarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarEmpleadoActionPerformed
-        Empleado e = recogerFormularioEmpleado();
+        Empleado e = recogerDatosFormularioEmpleado();
         if (e != null) {
             Logica.addEmpleado(e);
+            vaciarFichaEmpleado();
+            setFichaSiEditable();
             msgInfo("Empleado añadido");
             actualizarTablaTodosEmpleados();
             actualizarTablaEmpleadosDeTrabajos();
+            activarOpcionAnadirUsuario();
         }
     }//GEN-LAST:event_btnGuardarEmpleadoActionPerformed
 //</editor-fold>
@@ -535,22 +569,22 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 //EMPLEADOS ELIMINAR ###########################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ELIMINAR">  
     private void activarOpcionEliminarEmpleado() {
-        desactivarBotonesOpciones();
+        desactivarBotonesOperaciones();
         btnEliminarEmpleado.setEnabled(true);
         rellenarFichaEmpleado();
         setFichaNoEditable();
     }
 
 
-
     private void rbEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbEliminarEmpleadoActionPerformed
-     activarOpcionEliminarEmpleado();
+        activarOpcionEliminarEmpleado();
     }//GEN-LAST:event_rbEliminarEmpleadoActionPerformed
 
     private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
-        if (confirmar("Realmente desea borrar el empleado "+empleadoSiendoEditado.getId()+" "+empleadoSiendoEditado.getNombre()+" "+empleadoSiendoEditado.getApellidos())){
+        if (confirmar("Realmente desea borrar el empleado " + empleadoSiendoEditado.getId() + " " + empleadoSiendoEditado.getNombre() + " " + empleadoSiendoEditado.getApellidos())) {
             Logica.eliminarEmpleado(empleadoSiendoEditado);
             msgInfo("Empleado eliminado");
+            empleadoSiendoEditado=null;
             actualizarTablaTodosEmpleados();
             actualizarTablaEmpleadosDeTrabajos();
         }
@@ -560,7 +594,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 //EMPLEADOS ASIGNAR ############################################################
     //<editor-fold defaultstate="collapsed" desc="EMPLEADOS OPERACION ASIGNAR">
     private void activarOpcionAsignarTrabajoAEmpleado() {
-        desactivarBotonesOpciones();
+        desactivarBotonesOperaciones();
         btnAsignarEmpleado.setEnabled(true);
         inputNTrabajoEmpleado.setEnabled(true);
         inputNTrabajoEmpleado.setText("");
@@ -570,39 +604,40 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }
 
     private void rbAsignarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAsignarEmpleadoActionPerformed
-         activarOpcionAsignarTrabajoAEmpleado();
+        activarOpcionAsignarTrabajoAEmpleado();
     }//GEN-LAST:event_rbAsignarEmpleadoActionPerformed
 
     private void btnAsignarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarEmpleadoActionPerformed
-        int numeroTrabajo=0;
-        try{
-        numeroTrabajo = Integer.parseInt(inputNTrabajoEmpleado.getText());
-        if (numeroTrabajo==0)
-            throw new Exception();
-        }catch (Exception ex){
+        int numeroTrabajo = 0;
+        try {
+            numeroTrabajo = Integer.parseInt(inputNTrabajoEmpleado.getText());
+            if (numeroTrabajo == 0) {
+                throw new Exception();
+            }
+        } catch (Exception ex) {
             msgError("Numero de trabajo erroneo");
             return;
         }
         Trabajo t = Logica.getTrabajo(numeroTrabajo);
-        if (t==null){
-            msgError("El trabajo "+numeroTrabajo+" no existe");
+        if (t == null) {
+            msgError("El trabajo " + numeroTrabajo + " no existe");
             return;
         }
-        
-        Logica.asignarEmpleadoATrabajo(empleadoSiendoEditado.getId(),numeroTrabajo);
-        msgInfo("Empleado "+empleadoSiendoEditado.getId()+" "+empleadoSiendoEditado.getNombre()+" "+ empleadoSiendoEditado.getApellidos()+" asignado a trabajo "+t.getNumero()+" "+t.getNombre());
+
+        Logica.asignarEmpleadoATrabajo(empleadoSiendoEditado.getId(), numeroTrabajo);
+        msgInfo("Empleado " + empleadoSiendoEditado.getId() + " " + empleadoSiendoEditado.getNombre() + " " + empleadoSiendoEditado.getApellidos() + " asignado a trabajo " + t.getNumero() + " " + t.getNombre());
         inputNTrabajoEmpleado.setText("");
         acutalizarTablaTrabajos();
     }//GEN-LAST:event_btnAsignarEmpleadoActionPerformed
     //</editor-fold>
 //</editor-fold>
-    
+
 // LISTENER TABLAS #############################################################
 //<editor-fold defaultstate="collapsed" desc="LISTENER TABLAS">
     /*listener clic tablas*/
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        
+
         //tabla trabajos
         if (e.getSource().equals(tblTrabajos.getSelectionModel())) {
             if (this.tblTrabajos.getSelectedRow() != -1) {
@@ -610,24 +645,23 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
             } else {
                 btnGestionarEmpleados.setEnabled(false);
             }
-        }
-        
-        //tabla empleados de trabajo
+        } //tabla empleados de trabajo
         else if (e.getSource().equals(tblEmpleadosDeTrabajo.getSelectionModel())) {
             if (this.tblEmpleadosDeTrabajo.getSelectedRow() != -1) {
                 btnDesasignar.setEnabled(true);
             } else {
                 btnDesasignar.setEnabled(false);
             }
-        }
-        
-        //tabla empleados
+        } //tabla empleados
         else if (e.getSource().equals(tblTodosEmpleados.getSelectionModel())) {
             int filaSeleccionada = this.tblTodosEmpleados.getSelectedRow();
             if (filaSeleccionada != -1) {
                 int filaCorrecta = this.tblTodosEmpleados.convertRowIndexToModel(filaSeleccionada);
                 int idEmpleado = (int) this.tblTodosEmpleados.getModel().getValueAt(filaCorrecta, 0);
                 empleadoSeleccionado(idEmpleado);
+                if (operacionesActivadas) {
+                    activarOperaciones();
+                }
             } else {
                 vaciarFichaEmpleado();
                 deshabilitarFichaEmpleado();
@@ -642,14 +676,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     private void msgError(String msg) {
         JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.ERROR_MESSAGE);
     }
-    
+
     private void msgInfo(String msg) {
         JOptionPane.showMessageDialog(this, msg, "error", JOptionPane.INFORMATION_MESSAGE);
     }
-    
-    
+
     private boolean confirmar(String msg) {
-        Object[] opciones = {"Sí","No"};
+        Object[] opciones = {"Sí", "No"};
         return JOptionPane.showOptionDialog(this,
                 msg,
                 "Aviso",
@@ -657,14 +690,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
                 JOptionPane.WARNING_MESSAGE,
                 null,
                 opciones,
-                "default")==JOptionPane.YES_OPTION;
+                "default") == JOptionPane.YES_OPTION;
     }
 //</editor-fold>
-  
-    
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -907,9 +936,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
                 .addGroup(panelAccionAgregarTrabajoInternoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbNombreTrabajoNuevo)
                     .addComponent(inputNombreTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnGuardarTrabajoNuevo)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelAgregarTrabajoLayout = new javax.swing.GroupLayout(panelAgregarTrabajo);
@@ -930,7 +959,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
                 .addComponent(lbAgregarTrabajo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelAccionAgregarTrabajoInterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         panelAccionesTrabajos.add(panelAgregarTrabajo, "panelAgregarTrabajo");
@@ -1058,7 +1087,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
             panelTablaEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTablaEmpleadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tblEmpleadosScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(tblEmpleadosScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1564,5 +1593,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     private javax.swing.JTable tblTrabajos;
     private javax.swing.JScrollPane tblTrabajosScroll;
     // End of variables declaration//GEN-END:variables
+
 // </editor-fold>     
 }
