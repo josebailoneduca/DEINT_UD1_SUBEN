@@ -7,6 +7,7 @@ Lista de paquetes:
 package pruebaud1.gui.ventanas;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ButtonModel;
@@ -29,6 +30,7 @@ import pruebaud1.logica.Logica;
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectionListener {
 
+    //ATRIBUTOS
     private Trabajo trabajoSiendoEditado = null;
     private Empleado empleadoSiendoEditado = null;
     private boolean operacionesActivadas = false;
@@ -82,7 +84,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     /**
      * Actualiza la tabla de trabajos
      */
-    private void acutalizarTablaTrabajos() {
+    private void actualizarTablaTrabajos() {
         //actualizar los datos de la tabla
         TrabajosTableModel etm = (TrabajosTableModel) tblTrabajos.getModel();
         etm.fireTableDataChanged();
@@ -159,6 +161,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     private void miEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miEmpleadosActionPerformed
         CardLayout cl = (CardLayout) this.panelCardsGeneral.getLayout();
         cl.show(panelCardsGeneral, "panelGeneralEmpleados");
+        habilitarFiltrado();
     }//GEN-LAST:event_miEmpleadosActionPerformed
 
     //</editor-fold>
@@ -199,7 +202,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         String nombre = inputNombreTrabajo.getText();
         if (nombre.length() > 0) {
             Logica.addTrabajo(new Trabajo(numero, nombre));
-            this.acutalizarTablaTrabajos();
+            this.actualizarTablaTrabajos();
             resetearFormNuevoTrabajo();
         }
     }//GEN-LAST:event_btnGuardarTrabajoNuevoActionPerformed
@@ -272,7 +275,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         int idEmpleado = (int) this.tblEmpleadosDeTrabajo.getModel().getValueAt(filaCorrecta, 0);
         Logica.desasignarEmpleadoDeTrabajo(idEmpleado, this.trabajoSiendoEditado.getNumero());
         this.actualizarTablaEmpleadosDeTrabajos();
-        this.acutalizarTablaTrabajos();
+        this.actualizarTablaTrabajos();
     }//GEN-LAST:event_btnDesasignarActionPerformed
 //</editor-fold>
 
@@ -304,6 +307,22 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     }//GEN-LAST:event_busquedaKeyReleased
 
     /**
+     * Habilita o deshabilita el filtrado en función de si hay o no empleados
+     */
+    private void habilitarFiltrado(){
+        if (Logica.getEmpleados().size()>0){
+            for (Component c : panelFiltros.getComponents()){
+                c.setEnabled(true);
+            }
+            if (busqueda.getText().length()==0)
+                btnBuscarFiltro.setEnabled(false);
+        }else{
+            for (Component c : panelFiltros.getComponents()){
+                c.setEnabled(false);
+            }
+        }
+    }
+    /**
      * Establece el filtro a usar por la tabla de empleados en funcion de lo 
      * seleccionado
      */
@@ -333,7 +352,21 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         RowFilter<EmpleadosTableModel, Integer> rf = RowFilter.regexFilter(txtFiltro, indiceFiltro);
         TableRowSorter<EmpleadosTableModel> rs = (TableRowSorter<EmpleadosTableModel>) tblTodosEmpleados.getRowSorter();
         rs.setRowFilter(rf);
+        tblTodosEmpleados.getSelectionModel().clearSelection();
     }
+    
+    
+     /**
+     * Activa el filtro en funcion del contenido actual del campo de busquda
+     * @param evt 
+     */
+	 private void btnFiltroLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroLimpiarActionPerformed
+        this.busqueda.setText("");
+        btnBuscarFiltro.setEnabled(false);
+        filtrarEmpleados();
+    }//GEN-LAST:event_btnFiltroLimpiarActionPerformed
+                                                   
+
 //</editor-fold>
 
 //##################################################
@@ -347,7 +380,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
      */
     private void empleadoSeleccionado(int idEmpleado) {
         empleadoSiendoEditado = Logica.getEmpleado(idEmpleado);
-        rellenarFichaEmpleado();
+        if (operacionesActivadas)
+            rellenarFichaEmpleado();
     }
 
     /**
@@ -572,6 +606,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         vaciarFichaEmpleado();
         inputIdEmpleado.setText("" + Logica.proximaIdEmpleado);
         setFichaSiEditable();
+        habilitarFiltrado();
     }
 
     private void rbAnadirEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbAnadirEmpleadoActionPerformed
@@ -599,6 +634,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         btnEliminarEmpleado.setEnabled(true);
         rellenarFichaEmpleado();
         setFichaNoEditable();
+        habilitarFiltrado();
     }
 
 
@@ -653,7 +689,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         Logica.asignarEmpleadoATrabajo(empleadoSiendoEditado.getId(), numeroTrabajo);
         msgInfo("Empleado " + empleadoSiendoEditado.getId() + " " + empleadoSiendoEditado.getNombre() + " " + empleadoSiendoEditado.getApellidos() + " asignado a trabajo " + t.getNumero() + " " + t.getNombre());
         inputNTrabajoEmpleado.setText("");
-        acutalizarTablaTrabajos();
+        actualizarTablaTrabajos();
+        actualizarTablaEmpleadosDeTrabajos();
     }//GEN-LAST:event_btnAsignarEmpleadoActionPerformed
     //</editor-fold>
 //</editor-fold>
@@ -689,6 +726,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
                     activarOperaciones();
                 }
             } else {
+                empleadoSiendoEditado=null;
                 vaciarFichaEmpleado();
                 deshabilitarFichaEmpleado();
                 desactivarOperaciones();
@@ -770,6 +808,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
         rbFiltroDNI = new javax.swing.JRadioButton();
         rbFiltroSueldo = new javax.swing.JRadioButton();
         btnBuscarFiltro = new javax.swing.JButton();
+        btnFiltroLimpiar = new javax.swing.JButton();
         panelFichaYoperacionesEmpleado = new javax.swing.JPanel();
         panelFichaEmpleado = new javax.swing.JPanel();
         lbFichaEmpNombre = new javax.swing.JLabel();
@@ -1146,28 +1185,37 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
             }
         });
 
+        btnFiltroLimpiar.setText("X");
+        btnFiltroLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltroLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(lbBuscarPor)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(rbFiltroSueldo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(btnBuscarFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBuscarFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addComponent(rbFiltroDNI)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(lbBuscarPor))
+                            .addComponent(rbFiltroDNI))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(rbFiltroApellido)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnFiltroLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -1178,7 +1226,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbFiltroApellido)
-                    .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(busqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFiltroLimpiar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
@@ -1545,6 +1594,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+
     // <editor-fold defaultstate="collapsed" desc="ATRIBUTOS AUTOGENERADOS">  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraDeMenu;
@@ -1553,6 +1604,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     private javax.swing.JButton btnBuscarFiltro;
     private javax.swing.JButton btnDesasignar;
     private javax.swing.JButton btnEliminarEmpleado;
+    private javax.swing.JButton btnFiltroLimpiar;
     private javax.swing.JButton btnGestionarEmpleados;
     private javax.swing.JButton btnGuardarCambios;
     private javax.swing.JButton btnGuardarEmpleado;
@@ -1621,4 +1673,4 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ListSelectio
     // End of variables declaration//GEN-END:variables
 
 // </editor-fold>     
-}
+}//fin de clase
